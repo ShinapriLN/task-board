@@ -1,6 +1,5 @@
 import { db } from "@/app/lib/db";
 import { NextResponse, NextRequest } from "next/server";
-import { useRouter } from "next/router";
 
 export async function GET(
   request: NextRequest,
