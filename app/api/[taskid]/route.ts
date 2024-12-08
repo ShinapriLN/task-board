@@ -1,12 +1,12 @@
 import { db } from "@/app/lib/db";
-
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
+import { useRouter } from "next/router";
 
 export async function GET(
-  request: Request,
-  { params }: { params: { taskid: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ taskid: string }> }
 ) {
-  const taskId = params.taskid;
+  const taskId = (await params).taskid;
   const res = db.prepare(`SELECT * FROM task where id=?`);
   const result = await res.get(parseInt(taskId));
 
