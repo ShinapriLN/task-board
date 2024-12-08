@@ -43,40 +43,34 @@ export default function RemovalModal({
           </div>
           <div className="w-full h-full flex items-end justify-end gap-2">
             <input type="hidden" name="removal-id" value={task.id} readOnly />
-            <motion.div
+            <motion.button
               whileHover={{
                 scale: 1.05,
               }}
               whileTap={{
                 scale: 0.95,
               }}
-            >
-              <button
-                onClick={onClose}
-                type="button"
-                className={`rounded-full py-1.5 px-4
+              onClick={onClose}
+              type="button"
+              className={`rounded-full py-1.5 px-4
             bg-[#97A3B6] text-white text-[0.875rem] flex gap-1`}
-              >
-                Cancel
-              </button>
-            </motion.div>
-            <motion.div
+            >
+              Cancel
+            </motion.button>
+            <motion.button
               whileHover={{
                 scale: 1.05,
               }}
               whileTap={{
                 scale: 0.95,
               }}
-            >
-              <button
-                type="submit"
-                onClick={handleSubmit}
-                className={`rounded-full py-1.5  px-3
+              type="submit"
+              onClick={handleSubmit}
+              className={`rounded-full py-1.5  px-3
             bg-[#DD524C] text-white text-[0.875rem] flex gap-1`}
-              >
-                Confirm
-              </button>
-            </motion.div>
+            >
+              Confirm
+            </motion.button>
           </div>
         </form>
       </motion.div>

@@ -271,41 +271,36 @@ export default function Modal({
 
         <div className="w-full h-full flex justify-end items-end">
           <div className="flex gap-4 ">
-            <motion.div
+            <motion.button
               whileHover={{
                 scale: 1.05,
               }}
               whileTap={{
                 scale: 0.95,
               }}
+              disabled={
+                taskId && [13, 14, 15, 16].includes(taskId) ? true : false
+              }
+              onClick={taskId ? handleRemove : onClose}
+              type="button"
+              className="rounded-full py-1.5 px-6 bg-[#97A3B6] text-white text-[0.875rem] flex gap-1"
             >
-              <button
-                disabled={
-                  taskId && [13, 14, 15, 16].includes(taskId) ? true : false
-                }
-                onClick={taskId ? handleRemove : onClose}
-                type="button"
-                className="rounded-full py-1.5 px-6 bg-[#97A3B6] text-white text-[0.875rem] flex gap-1"
-              >
-                {taskId ? (
-                  <>
-                    Delete
-                    <Image src={TrashSvg} alt="trash" />
-                  </>
-                ) : (
-                  "Cancel"
-                )}
-              </button>
-            </motion.div>
-            <motion.div
+              {taskId ? (
+                <>
+                  Delete
+                  <Image src={TrashSvg} alt="trash" />
+                </>
+              ) : (
+                "Cancel"
+              )}
+            </motion.button>
+            <motion.button
               whileHover={{
                 scale: 1.05,
               }}
               whileTap={{
                 scale: 0.95,
               }}
-            >
-              <button
                 type="submit"
                 onClick={handleSubmit}
                 className={`rounded-full py-1.5 ${
@@ -320,8 +315,7 @@ export default function Modal({
                 ) : (
                   <>Add</>
                 )}
-              </button>
-            </motion.div>
+              </motion.button>
           </div>
         </div>
       </form>
