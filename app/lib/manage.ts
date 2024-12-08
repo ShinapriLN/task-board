@@ -1,7 +1,7 @@
 import { supabase } from "./supabase";
 
 export const fetchTask = async () => {
-  let { data: task, error } = await supabase.from("task").select("*");
+  const { data: task, error } = await supabase.from("task").select("*");
   if (!error) {
     return task;
   }
@@ -9,7 +9,7 @@ export const fetchTask = async () => {
 };
 
 export const fetchSpecific = async (id: number) => {
-  let { data: task, error } = await supabase
+  const { data: task, error } = await supabase
     .from("task")
     .select("*")
     .eq("id", id);

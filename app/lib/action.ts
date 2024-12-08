@@ -19,6 +19,12 @@ export async function formAction(formData: FormData) {
     },
   ]);
 
+  if (error) {
+    return console.log("action error", error);
+  }
+
+  console.log(data);
+
   revalidatePath("/");
 
   // console.log(
@@ -54,7 +60,10 @@ export async function formActionModify(formData: FormData) {
     return console.log("action error", error);
   }
 
+  console.log(data);
+
   revalidatePath("/");
+
   // console.log("Have a nice day!");
 }
 
