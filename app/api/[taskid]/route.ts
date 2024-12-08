@@ -6,9 +6,9 @@ export async function GET(
   request: Request,
   { params }: { params: { taskid: string } }
 ) {
-  const { taskid } = await params;
+  const taskId = params.taskid;
   const res = db.prepare(`SELECT * FROM task where id=?`);
-  const result = await res.get(parseInt(taskid));
+  const result = await res.get(parseInt(taskId));
 
   return NextResponse.json(result);
 }
