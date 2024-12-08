@@ -84,10 +84,6 @@ export default function Modal({
       } grid grid-cols-1 justify-between sm:grid-cols-2
    p-5 absolute top-0 bottom-0 left-0 right-0 z-0 h-full w-full`}
     >
-      <div
-        onClick={onClose}
-        className="bg-black/40 absolute w-full h-full top-0 left-0 right-0 bottom-0"
-      ></div>
       {/* <motion.div
         className={"bg-blue-600 rounded-xl absolute w-52 h-52"}
         initial={{ translateY: "100%" }} // เริ่มจากนอกหน้าจอ
@@ -301,21 +297,21 @@ export default function Modal({
               whileTap={{
                 scale: 0.95,
               }}
-                type="submit"
-                onClick={handleSubmit}
-                className={`rounded-full py-1.5 ${
-                  taskId ? "px-6" : "px-8"
-                }  bg-[#3662E3] text-white text-[0.875rem] flex gap-1`}
-              >
-                {taskId ? (
-                  <>
-                    Save
-                    <Image src={DoneSvg} alt="Done" />
-                  </>
-                ) : (
-                  <>Add</>
-                )}
-              </motion.button>
+              type="submit"
+              onClick={handleSubmit}
+              className={`rounded-full py-1.5 ${
+                taskId ? "px-6" : "px-8"
+              }  bg-[#3662E3] text-white text-[0.875rem] flex gap-1`}
+            >
+              {taskId ? (
+                <>
+                  Save
+                  <Image src={DoneSvg} alt="Done" />
+                </>
+              ) : (
+                <>Add</>
+              )}
+            </motion.button>
           </div>
         </div>
       </form>
@@ -327,6 +323,10 @@ export default function Modal({
           handleSubmit={handleSubmit}
         />
       )}
+      <div
+        onClick={onClose}
+        className="bg-black/40 absolute w-full h-full top-0 left-0 right-0 bottom-0 -z-10"
+      ></div>
     </motion.div>
   );
 }
