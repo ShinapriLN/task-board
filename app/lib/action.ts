@@ -1,6 +1,6 @@
 "use server";
 import { revalidatePath } from "next/cache";
-import { db } from "./db";
+import { supabase } from "./supabase";
 
 export async function formAction(formData: FormData) {
   const [taskname, description, icon, status] = await Promise.all([
@@ -10,10 +10,15 @@ export async function formAction(formData: FormData) {
     formData.get("status") || "status-default",
   ]);
 
-  const insert = db.prepare(
-    `INSERT INTO task ([taskname], [description], [icon], [status]) VALUES (?,?,?,?)`
-  );
-  insert.run(taskname, description, icon, status);
+  const { data, error } = await supabase.from("task").insert([
+    {
+      taskname: taskname,
+      description: description,
+      icon: icon,
+      status: status,
+    },
+  ]);
+
   revalidatePath("/");
 
   // console.log(
@@ -33,27 +38,34 @@ export async function formActionModify(formData: FormData) {
       formData.get("default-status"),
     ]);
 
-  const update = db.prepare(
-    `UPDATE [task]
-    SET [taskname]=?, [description]=?, [icon]=?, [status]=?
-    WHERE ([task].[id] = ?)`
-  );
-  update.run(
-    taskname,
-    description,
-    icon || defaulticon,
-    status || defaultstatus,
-    id
-  );
+  const { data, error } = await supabase
+    .from("task")
+    .update([
+      {
+        taskname: taskname,
+        description: description,
+        icon: icon || defaulticon,
+        status: status || defaultstatus,
+      },
+    ])
+    .eq("id", id);
+
+  if (error) {
+    return console.log("action error", error);
+  }
 
   revalidatePath("/");
   // console.log("Have a nice day!");
 }
 
 export async function formRemove(formData: FormData) {
-  const removalId = await formData.get("removal-id");
+  const removalId = formData.get("removal-id");
 
-  const remove = db.prepare(`DELETE FROM [task] WHERE ([task].[id] = ?)`);
-  remove.run(removalId);
+  const { error } = await supabase.from("task").delete().eq("id", removalId);
+
+  if (error) {
+    return console.log("action error", error);
+  }
+
   revalidatePath("/");
 }

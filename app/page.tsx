@@ -6,34 +6,37 @@ import PenSvg from "@/public/resources/Edit_duotone.svg";
 
 import Card from "./component/card";
 import AddTask from "./component/addtask";
-
-import axios from "axios";
+import { Task } from "./lib/utils";
 
 import { Icon, Status, colorMatchStatus } from "./lib/utils";
 import { useEffect, useState } from "react";
 import Modal from "./component/modal";
+import { fetchTask } from "./lib/manage";
 
 export default function Home() {
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [modalActive, setModalActive] = useState(false);
   const [revalidation, setRevalidation] = useState(false);
   const [taskId, setTaskId] = useState<number | null>(null);
-
-  const fetch = async () => {
-    const res = await axios.get("http://localhost:3000/api");
-    const result = await res.data;
-    setTasks(result);
-  };
 
   const handlePressCard = (id: number) => {
     setTaskId(id);
     setModalActive(true);
   };
-
+  //  HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
   useEffect(() => {
-    setTimeout(() => {
-      fetch();
-    }, 100);
+    const fetch = async () => {
+      const result = await fetchTask();
+      setTasks(result as Task[]);
+    };
+    fetch();
+  }, []);
+  useEffect(() => {
+    const fetch = async () => {
+      const result = await fetchTask();
+      setTasks(result as Task[]);
+    };
+    fetch();
   }, [revalidation]);
 
   return (
@@ -52,37 +55,31 @@ export default function Home() {
       </div>
 
       <div className="flex flex-col gap-4 ">
-        <div className="flex flex-col gap-4 sm:max-h-[500px] sm:overflow-y-scroll scrollbar-hide">
-          {tasks.map(
-            (task: {
-              id: number;
-              taskname: string;
-              description: string;
-              icon: string;
-              status: string;
-            }) => (
-              <div
-                key={task.id}
-                onClick={() => handlePressCard(task.id)}
-                className="mx-5"
-              >
-                <Card
-                  title={task.taskname}
-                  description={task.description}
-                  icon={[Icon(task.icon) ?? "", Status(task.status)]}
-                  color={colorMatchStatus(task.status)}
-                />
-              </div>
-            )
-          )}
-        </div>
+        {tasks.map(
+          (task: {
+            id: number;
+            taskname: string;
+            description: string;
+            icon: string;
+            status: string;
+          }) => (
+            <div key={task.id} onClick={() => handlePressCard(task.id)}>
+              <Card
+                title={task.taskname}
+                description={task.description}
+                icon={[Icon(task.icon) ?? "", Status(task.status)]}
+                color={colorMatchStatus(task.status)}
+              />
+            </div>
+          )
+        )}
 
         <div onClick={() => handlePressCard(0)}>
           <AddTask title="Add new task" />
         </div>
       </div>
       <Modal
-        id={taskId}
+        taskId={taskId}
         active={modalActive}
         onClose={() => setModalActive(false)}
         revalidation={[revalidation, setRevalidation]}

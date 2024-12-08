@@ -12,15 +12,16 @@ import { formAction, formActionModify } from "../lib/action";
 import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import RemovalModal from "./removalmodal";
-import { Task, fetchSpecific, statusMatchTask } from "../lib/utils";
+import { Task, statusMatchTask } from "../lib/utils";
+import { fetchSpecific } from "../lib/manage";
 
 export default function Modal({
-  id,
+  taskId,
   active,
   onClose,
   revalidation,
 }: {
-  id: number | null;
+  taskId: number | null;
   active: boolean;
   onClose: () => void;
   revalidation: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
@@ -31,9 +32,9 @@ export default function Modal({
   const [removeModalActive, setRemoveModalActive] = useState(false);
 
   useEffect(() => {
-    if (id && id !== 0) {
+    if (taskId && taskId !== 0) {
       const getTask = async () => {
-        const result = await fetchSpecific(id.toString());
+        const result = await fetchSpecific(taskId);
         setTask(result);
       };
       getTask();
@@ -41,7 +42,7 @@ export default function Modal({
       setIconSelect("");
       setStatusSelect("");
     }
-  }, [id]);
+  }, [taskId]);
 
   useEffect(() => {
     setIconSelect(task?.icon || "");
@@ -56,9 +57,9 @@ export default function Modal({
     // setTimeout(() => {
 
     // }, 100);
-    if (id && id !== 0) {
+    if (taskId && taskId !== 0) {
       const getTask = async () => {
-        const result = await fetchSpecific(id.toString());
+        const result = await fetchSpecific(taskId);
         setTask(result);
       };
       getTask();
@@ -83,7 +84,6 @@ export default function Modal({
       } grid grid-cols-1 justify-between sm:grid-cols-2
    p-5 absolute top-0 bottom-0 left-0 right-0 z-0 h-full w-full`}
     >
-      
       <div
         onClick={onClose}
         className="bg-black/40 absolute w-full h-full top-0 left-0 right-0 bottom-0"
@@ -109,7 +109,7 @@ export default function Modal({
       {/* start Formmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm */}
 
       <form
-        action={id ? formActionModify : formAction}
+        action={taskId ? formActionModify : formAction}
         className={` bg-white rounded-xl h-full flex flex-col px-8 py-5 
           gap-4 col-start-1 sm:col-start-2 z-10`}
       >
@@ -127,7 +127,7 @@ export default function Modal({
           id="id"
           type="hidden"
           name="id"
-          value={id ? id : ""}
+          value={taskId ? taskId : ""}
           readOnly
           // className="hidden"
         />
@@ -136,7 +136,7 @@ export default function Modal({
           <label className="text-[0.75rem] text-[#97A3B6]">Task name</label>
           <input
             placeholder="Enter a task name."
-            defaultValue={id ? task?.taskname : ""}
+            defaultValue={taskId ? task?.taskname : ""}
             name="task-name"
             className="border border-[#00000033] text-[1.25rem] font-light px-4 py-2 rounded-lg focus:outline-[#3662E3] "
             required
@@ -148,7 +148,7 @@ export default function Modal({
           <textarea
             placeholder="Enter a short description."
             name="description"
-            defaultValue={id ? task?.description : ""}
+            defaultValue={taskId ? task?.description : ""}
             rows={5}
             className="border border-[#00000033] text-[1.25rem] font-light px-4 py-2 rounded-lg focus:outline-[#3662E3] "
           />
@@ -171,12 +171,12 @@ export default function Modal({
                   name="icon"
                   id={`icon-${id.toString()}`}
                   defaultChecked={
-                    id ? `icon-${id.toString()}` === task?.icon : false
+                    taskId ? `icon-${id.toString()}` === task?.icon : false
                   }
                   value={`icon-${id.toString()}`}
                   style={{ display: "none" }}
                   onChange={() => setIconSelect(`icon-${id.toString()}`)}
-                  required
+                  required={taskId ? false : true}
                 />
                 <label
                   htmlFor={`icon-${id.toString()}`}
@@ -209,7 +209,7 @@ export default function Modal({
                   type="radio"
                   name="status"
                   defaultChecked={
-                    id ? `status-${id.toString()}` === task?.status : false
+                    taskId ? `status-${id.toString()}` === task?.status : false
                   }
                   id={`status-${id.toString()}`}
                   value={`status-${id.toString()}`}
@@ -259,13 +259,13 @@ export default function Modal({
         <input
           type="hidden"
           name="default-icon"
-          value={(id && task?.icon) || ""}
+          value={(taskId && task?.icon) || ""}
           readOnly
         />
         <input
           type="hidden"
           name="default-status"
-          value={(id && task?.status) || ""}
+          value={(taskId && task?.status) || ""}
           readOnly
         />
 
@@ -280,11 +280,14 @@ export default function Modal({
               }}
             >
               <button
-                onClick={id ? handleRemove : onClose}
+                disabled={
+                  taskId && [13, 14, 15, 16].includes(taskId) ? true : false
+                }
+                onClick={taskId ? handleRemove : onClose}
                 type="button"
                 className="rounded-full py-1.5 px-6 bg-[#97A3B6] text-white text-[0.875rem] flex gap-1"
               >
-                {id ? (
+                {taskId ? (
                   <>
                     Delete
                     <Image src={TrashSvg} alt="trash" />
@@ -306,10 +309,10 @@ export default function Modal({
                 type="submit"
                 onClick={handleSubmit}
                 className={`rounded-full py-1.5 ${
-                  id ? "px-6" : "px-8"
+                  taskId ? "px-6" : "px-8"
                 }  bg-[#3662E3] text-white text-[0.875rem] flex gap-1`}
               >
-                {id ? (
+                {taskId ? (
                   <>
                     Save
                     <Image src={DoneSvg} alt="Done" />
