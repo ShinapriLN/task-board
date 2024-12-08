@@ -265,15 +265,15 @@ export default function Modal({
           readOnly
         />
 
-        <div className="w-full h-full flex justify-end items-end">
+        <div className="w-full flex justify-end">
           <div className="flex gap-4 ">
-            <button
-              // whileHover={{
-              //   scale: 1.05,
-              // }}
-              // whileTap={{
-              //   scale: 0.95,
-              // }}
+            <motion.button
+              whileHover={{
+                scale: 1.05,
+              }}
+              whileTap={{
+                scale: 0.95,
+              }}
               disabled={
                 taskId && [13, 14, 15, 16].includes(taskId) ? true : false
               }
@@ -289,7 +289,7 @@ export default function Modal({
               ) : (
                 "Cancel"
               )}
-            </button>
+            </motion.button>
             <motion.button
               whileHover={{
                 scale: 1.05,
@@ -325,7 +325,7 @@ export default function Modal({
       )}
       <div
         onClick={onClose}
-        className="bg-black/40 absolute w-full h-full top-0 left-0 right-0 bottom-0 -z-10"
+        className="bg-black/40 absolute w-full h-full top-0 left-0 right-0 bottom-0"
       ></div>
     </motion.div>
   );
