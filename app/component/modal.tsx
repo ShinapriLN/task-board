@@ -110,7 +110,7 @@ export default function Modal({
 
       <form
         action={taskId ? formActionModify : formAction}
-        className={` bg-white rounded-xl h-full flex flex-col px-8 py-5 
+        className={` bg-white rounded-xl h-full flex flex-col px-8 py-5
           gap-4 col-start-1 sm:col-start-2 z-10`}
       >
         <div className="flex justify-between">
@@ -271,13 +271,13 @@ export default function Modal({
 
         <div className="w-full h-full flex justify-end items-end">
           <div className="flex gap-4 ">
-            <motion.button
-              whileHover={{
-                scale: 1.05,
-              }}
-              whileTap={{
-                scale: 0.95,
-              }}
+            <button
+              // whileHover={{
+              //   scale: 1.05,
+              // }}
+              // whileTap={{
+              //   scale: 0.95,
+              // }}
               disabled={
                 taskId && [13, 14, 15, 16].includes(taskId) ? true : false
               }
@@ -293,7 +293,7 @@ export default function Modal({
               ) : (
                 "Cancel"
               )}
-            </motion.button>
+            </button>
             <motion.button
               whileHover={{
                 scale: 1.05,
