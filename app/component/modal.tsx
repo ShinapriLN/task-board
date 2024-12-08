@@ -265,7 +265,7 @@ export default function Modal({
           readOnly
         />
 
-        <div className="w-full flex justify-end">
+        <div className="w-full h-full flex justify-end items-end">
           <div className="flex gap-4 ">
             <motion.button
               whileHover={{
