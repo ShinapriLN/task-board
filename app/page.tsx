@@ -75,7 +75,7 @@ export default function Home() {
     .on(
       "postgres_changes",
       { event: "*", schema: "public", table: "task" },
-      (payload) => {
+      () => {
         const fetch = async () => {
           // console.log("Change received!", payload);
           const result = await fetchTask();

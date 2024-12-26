@@ -11,7 +11,7 @@ export async function formAction(formData: FormData) {
   ]);
 
   if (taskname && icon) {
-    const { data, error } = await supabase.from("task").insert([
+    const { error } = await supabase.from("task").insert([
       {
         taskname: taskname,
         description: description,
@@ -45,7 +45,7 @@ export async function formActionModify(formData: FormData) {
       formData.get("default-status"),
     ]);
 
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from("task")
     .update([
       {
@@ -62,8 +62,6 @@ export async function formActionModify(formData: FormData) {
   }
 
   // console.log(data);
-
-  revalidatePath("/");
 
   // console.log("Have a nice day!");
 }
