@@ -29,7 +29,7 @@ export default function Card({
       style={{ background: Color[color].card }}
     >
       <div className="flex gap-5 ">
-        <div className="w-11 h-11 rounded-2xl flex items-center justify-center bg-[#F8FAFC]  ">
+        <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-[#F8FAFC]  ">
           <Image src={icon[0]} width={20} height={20} alt="Icon" />
         </div>
         <div className="flex flex-col justify-center">
@@ -42,7 +42,7 @@ export default function Card({
       </div>
       {icon[1] && (
         <div
-          className="w-11 h-11 rounded-2xl flex items-center justify-center"
+          className="w-11 h-11 rounded-xl flex items-center justify-center"
           style={{ background: Color[color].btn }}
         >
           <Image src={icon[1]} alt="Icon" />
