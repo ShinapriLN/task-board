@@ -87,7 +87,7 @@ export default function Home() {
     .subscribe();
 
   return (
-    <div className="w-[550px] relative flex flex-col p-6 rounded-lg">
+    <div className="w-[550px] flex flex-col p-6 rounded-lg">
       <div className="flex my-10 gap-2">
         <div>
           <Image src={LogoSvg} alt="Logo" />
