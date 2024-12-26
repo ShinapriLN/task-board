@@ -1,7 +1,10 @@
 import { supabase } from "./supabase";
 
 export const fetchTask = async () => {
-  const { data: task, error } = await supabase.from("task").select("*");
+  const { data: task, error } = await supabase
+    .from("task")
+    .select("*")
+    .order("id", { ascending: true });
   if (!error) {
     return task;
   }

@@ -12,6 +12,7 @@ import { Icon, Status, colorMatchStatus } from "./lib/utils";
 import { useEffect, useState } from "react";
 import Modal from "./component/modal";
 import { fetchTask } from "./lib/manage";
+import { supabase } from "./lib/supabase";
 
 export default function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -20,9 +21,17 @@ export default function Home() {
   const [taskId, setTaskId] = useState<number | null>(null);
 
   const handlePressCard = (id: number) => {
+    if (id) {
+      window.history.replaceState({}, "", `/boards/${id}`);
+    }
     setTaskId(id);
     setModalActive(true);
   };
+  useEffect(() => {
+    if (!modalActive) {
+      window.history.replaceState({}, "", `/`);
+    }
+  }, [modalActive]);
   //  HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
   useEffect(() => {
     const fetch = async () => {
@@ -31,13 +40,51 @@ export default function Home() {
     };
     fetch();
   }, []);
-  useEffect(() => {
-    const fetch = async () => {
-      const result = await fetchTask();
-      setTasks(result as Task[]);
-    };
-    fetch();
-  }, [revalidation]);
+  // useEffect(() => {
+  //   // setTimeout(() => {
+  //   //   const fetch = async () => {
+  //   //     const result = await fetchTask();
+  //   //     setTasks(result as Task[]);
+  //   //   };
+  //   //   fetch();
+  //   // }, 200);
+  //   const fetch = async () => {
+  //     const result = await fetchTask();
+  //     setTasks(result as Task[]);
+  //   };
+  //   fetch();
+  // }, [revalidation]);
+
+  // useEffect(() => {
+  //   // setTimeout(() => {
+  //   //   const fetch = async () => {
+  //   //     const result = await fetchTask();
+  //   //     setTasks(result as Task[]);
+  //   //   };
+  //   //   fetch();
+  //   // }, 200);
+  //   const fetch = async () => {
+  //     const result = await fetchTask();
+  //     setTasks(result as Task[]);
+  //   };
+  //   fetch();
+  // }, [modalActive]);
+
+  supabase
+    .channel("task")
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "task" },
+      (payload) => {
+        const fetch = async () => {
+          // console.log("Change received!", payload);
+          const result = await fetchTask();
+          setTasks(result as Task[]);
+        };
+        fetch();
+      }
+    )
+    .subscribe();
 
   return (
     <div className="w-[552px] flex flex-col">

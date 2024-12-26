@@ -10,20 +10,21 @@ export async function formAction(formData: FormData) {
     formData.get("status") || "status-default",
   ]);
 
-  const { data, error } = await supabase.from("task").insert([
-    {
-      taskname: taskname,
-      description: description,
-      icon: icon,
-      status: status,
-    },
-  ]);
-
-  if (error) {
-    return console.log("action error", error);
+  if (taskname && icon) {
+    const { data, error } = await supabase.from("task").insert([
+      {
+        taskname: taskname,
+        description: description,
+        icon: icon,
+        status: status,
+      },
+    ]);
+    if (error) {
+      return console.log("action error", error);
+    }
   }
 
-  console.log(data);
+  // console.log(data);
 
   revalidatePath("/");
 
@@ -60,7 +61,7 @@ export async function formActionModify(formData: FormData) {
     return console.log("action error", error);
   }
 
-  console.log(data);
+  // console.log(data);
 
   revalidatePath("/");
 

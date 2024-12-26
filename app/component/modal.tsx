@@ -8,7 +8,7 @@ import TimeSvg from "@/public/resources/Time_atack_duotone.svg";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { formAction, formActionModify } from "../lib/action";
-
+import ValidateModal from "./validatemodal";
 import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import RemovalModal from "./removalmodal";
@@ -31,6 +31,11 @@ export default function Modal({
   const [task, setTask] = useState<Task | undefined>(undefined);
   const [removeModalActive, setRemoveModalActive] = useState(false);
 
+  const [taskname, setTaskname] = useState<string | undefined>("");
+  const [validateModalActive, setValidateModalActive] = useState(false);
+
+  const [prevId, setPrevId] = useState<number | null>(null);
+
   useEffect(() => {
     if (taskId && taskId !== 0) {
       const getTask = async () => {
@@ -47,25 +52,28 @@ export default function Modal({
   useEffect(() => {
     setIconSelect(task?.icon || "");
     setStatusSelect(task?.status || "");
+    setTaskname(task?.taskname);
   }, [task]);
 
   const handleSubmit = () => {
-    revalidation[1](!revalidation[0]);
-    onClose();
-    if (removeModalActive) setRemoveModalActive(false);
-    // HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
-    // setTimeout(() => {
-
-    // }, 100);
-    if (taskId && taskId !== 0) {
-      const getTask = async () => {
-        const result = await fetchSpecific(taskId);
-        setTask(result);
-      };
-      getTask();
+    if ((taskname && iconSelect) || removeModalActive) {
+      revalidation[1](!revalidation[0]);
+      onClose();
+      if (removeModalActive) setRemoveModalActive(false);
+      if (taskId && taskId !== 0) {
+        const getTask = async () => {
+          const result = await fetchSpecific(taskId);
+          setTask(result);
+        };
+        getTask();
+      }
+    } else {
+      setValidateModalActive(true);
     }
-    setIconSelect("");
-    setStatusSelect("");
+    setPrevId(taskId);
+
+    // console.log("status from db: ", task?.status);
+    // console.log("status from state: ", statusSelect);
   };
 
   const handleRemove = () => {
@@ -131,17 +139,19 @@ export default function Modal({
         <div className="flex flex-col">
           <label className="text-[0.75rem] text-[#97A3B6]">Task name</label>
           <input
+            id="task-name"
             placeholder="Enter a task name."
             defaultValue={taskId ? task?.taskname : ""}
             name="task-name"
             className="border border-[#00000033] text-[1.25rem] font-light px-4 py-2 rounded-lg focus:outline-[#3662E3] "
-            required
+            onChange={(e) => setTaskname(e.target.value)}
           />
         </div>
 
         <div className="flex flex-col">
           <label className="text-[0.75rem] text-[#97A3B6]">Description</label>
           <textarea
+            id="description"
             placeholder="Enter a short description."
             name="description"
             defaultValue={taskId ? task?.description : ""}
@@ -167,12 +177,18 @@ export default function Modal({
                   name="icon"
                   id={`icon-${id.toString()}`}
                   defaultChecked={
-                    taskId ? `icon-${id.toString()}` === task?.icon : false
+                    taskId
+                      ? prevId
+                        ? prevId === taskId
+                          ? `icon-${id.toString()}` === task?.icon
+                          : false
+                        : `icon-${id.toString()}` === task?.icon
+                      : false
                   }
                   value={`icon-${id.toString()}`}
                   style={{ display: "none" }}
                   onChange={() => setIconSelect(`icon-${id.toString()}`)}
-                  required={taskId ? false : true}
+                  // required={taskId ? false : true}
                 />
                 <label
                   htmlFor={`icon-${id.toString()}`}
@@ -275,7 +291,7 @@ export default function Modal({
                 scale: 0.95,
               }}
               disabled={
-                taskId && [13, 14, 15, 16].includes(taskId) ? true : false
+                taskId && [13, 14, 15, 20].includes(taskId) ? true : false
               }
               onClick={taskId ? handleRemove : onClose}
               type="button"
@@ -299,6 +315,7 @@ export default function Modal({
               }}
               type="submit"
               onClick={handleSubmit}
+              
               className={`rounded-full py-1.5 ${
                 taskId ? "px-6" : "px-8"
               }  bg-[#3662E3] text-white text-[0.875rem] flex gap-1`}
@@ -323,6 +340,10 @@ export default function Modal({
           handleSubmit={handleSubmit}
         />
       )}
+      <ValidateModal
+        active={validateModalActive}
+        onClose={() => setValidateModalActive(false)}
+      />
       <div
         onClick={onClose}
         className="bg-black/40 absolute w-full h-full top-0 left-0 right-0 bottom-0"
