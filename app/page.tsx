@@ -88,7 +88,7 @@ export default function Home() {
 
   return (
     <div className="w-[552px] flex flex-col">
-      <div className="flex my-8 gap-2">
+      <div className="flex my-12 gap-2">
         <div>
           <Image src={LogoSvg} alt="Logo" />
         </div>
