@@ -28,7 +28,7 @@ export default function ValidateModal({
         <div className={` bg-[#E3E8EF] rounded-xl flex flex-col p-6 gap-2 `}>
           <div className="text-[1.25rem]">Invalid input</div>
           <hr className="bg-[#97A3B6] stroke-2 stroke-[#97A3B6] border-1 border-[#97A3B6] rounded-full" />
-          <div>Taskname and icon have to be included!</div>
+          <div>Taskname and icon have to be filled!</div>
           <div className="w-full h-full flex items-end justify-end gap-2">
             <motion.button
               whileHover={{
